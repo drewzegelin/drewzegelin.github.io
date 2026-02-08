@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drew Zegelin</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: url("./background_ooze_color.png") center / cover no-repeat;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    /* Optional tint so the video stands out */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.15);
+      pointer-events: none;
+    }
+
+    .media {
+      width: min(92vw, 720px); /* fits on phones, caps on desktop */
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+      background: rgba(0,0,0,0.35);
+      z-index: 1;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+      object-fit: contain; /* shows whole video (no cropping) */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay"></div>
+
+  <div class="media">
+    <video controls playsinline preload="metadata">
+      <source src="./Joke_1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</body>
+</html>
+``
