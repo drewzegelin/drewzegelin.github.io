@@ -9,24 +9,24 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
 
-    /* Background stays full screen */
+    /* Full-screen background stays put */
     body {
       min-height: 100vh;   /* fallback */
-      min-height: 100dvh;  /* better on modern mobile */
+      min-height: 100dvh;  /* stable on modern mobile */
       background: url("./background_ooze_color.png") center / cover no-repeat;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      overflow: hidden; /* prevent scrolling so we stay on the background */
+      overflow: hidden; /* keep everything on the “hero” screen */
     }
 
-    /* Layer that controls positioning */
+    /* Stage holds and positions the media */
     .stage {
       position: relative;
       height: 100vh;   /* fallback */
-      height: 100dvh;  /* mobile */
+      height: 100dvh;  /* stable on mobile */
       width: 100%;
       display: flex;
       justify-content: center;
-      align-items: center; /* centered on desktop */
+      align-items: center; /* centered by default */
       padding: 0;
     }
 
@@ -48,6 +48,9 @@
       box-shadow: 0 12px 40px rgba(0,0,0,0.35);
       background: rgba(0,0,0,0.35);
       z-index: 1;
+
+      /* Desktop: no offset */
+      transform: translateY(0);
     }
 
     video {
@@ -55,35 +58,31 @@
       height: 100%;
       display: block;
       background: #000;
-      object-fit: contain;
+      object-fit: contain; /* show full video */
     }
 
     /*
-      MOBILE: anchor the video lower INSIDE the same screen.
-      This keeps it on the background without "pushing past" it.
+      MOBILE: keep it centered, but push it a bit DOWN
+      Change the number to adjust “just below center”
     */
     @media (max-width: 768px) {
-      .stage {
-        align-items: flex-end; /* move toward bottom */
-        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-      }
-
       .media {
         width: 94vw;
-        max-height: 46dvh; /* keeps it from being too tall */
+        max-height: 50dvh;
         border-radius: 14px;
+
+        /* 👇 ADJUST THIS: larger = lower */
+        transform: translateY(9vh);
       }
     }
 
-    /*
-      EXTRA SMALL PHONES: even shorter height so it can sit lower comfortably
-    */
+    /* Extra small phones: slightly less offset so it doesn’t feel too low */
     @media (max-width: 420px) {
       .media {
-        max-height: 42dvh;
-      }
-      .stage {
-        padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+        max-height: 46dvh;
+
+        /* 👇 ADJUST THIS TOO if needed */
+        transform: translateY(7vh);
       }
     }
   </style>
