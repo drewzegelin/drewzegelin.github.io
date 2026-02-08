@@ -6,20 +6,22 @@
   <title>Drew Zegelin</title>
 
   <style>
-    /* Basic reset */
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
 
-    /* Page background + centering (Desktop default) */
+    /* Use dynamic viewport height to avoid mobile address-bar "vh" jumps */
     body {
-      min-height: 100vh;
-      display: grid;
-      place-items: center; /* centered on PC */
+      min-height: 100vh;   /* fallback */
+      min-height: 100dvh;  /* modern mobile browsers */
+      display: flex;
+      align-items: center;     /* centered vertically on desktop */
+      justify-content: center; /* centered horizontally */
+      padding: 0;
       background: url("./background_ooze_color.png") center / cover no-repeat;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* Optional: slight dark overlay so media pops */
+    /* Optional subtle tint */
     .overlay {
       position: fixed;
       inset: 0;
@@ -27,10 +29,9 @@
       pointer-events: none;
     }
 
-    /* Video container */
     .media {
-      width: min(92vw, 780px);   /* responsive width; max on desktop */
-      aspect-ratio: 16 / 9;      /* keeps proportions */
+      width: min(92vw, 780px);
+      aspect-ratio: 16 / 9;
       border-radius: 18px;
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0,0,0,0.35);
@@ -43,39 +44,33 @@
       height: 100%;
       display: block;
       background: #000;
-      object-fit: contain; /* shows full video (no cropping) */
+      object-fit: contain;
     }
 
     /*
-      MOBILE FIX:
-      - Instead of perfectly centered, we align content toward the top
-      - Then add padding-top so the video sits lower on the screen
-      - Also cap the height so it doesn't feel too tall
+      Mobile: move it DOWN reliably.
+      We switch to top alignment + add a stable margin-top.
+      clamp(min, preferred, max) keeps it reasonable on all phone sizes.
     */
     @media (max-width: 768px) {
       body {
-        place-items: start center; /* stop vertical centering on mobile */
-        padding-top: 10vh;        /* push the video down */
+        align-items: flex-start; /* start from top */
+        justify-content: center;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
       }
 
       .media {
         width: 94vw;
-        max-height: 55vh;         /* prevents video from being too tall */
+        max-height: 55dvh;  /* stable height cap */
         border-radius: 14px;
+        margin-top: clamp(56px, 10dvh, 120px); /* <-- pushes DOWN */
       }
     }
 
-    /*
-      EXTRA SMALL PHONES:
-      Push it down a touch more + slightly smaller height cap
-    */
     @media (max-width: 420px) {
-      body {
-        padding-top: 12vh;
-      }
-
       .media {
-        max-height: 52vh;
+        max-height: 52dvh;
+        margin-top: clamp(64px, 12dvh, 140px); /* a bit lower on tiny phones */
       }
     }
   </style>
@@ -86,7 +81,7 @@
 
   <div class="media">
     <video controls playsinline preload="metadata">
-      <source src="./Joke_1.mp4" type="video/mp4" />
+      ./Joke_1.mp4
       Your browser does not support the video tag.
     </video>
   </div>
