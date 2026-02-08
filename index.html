@@ -9,22 +9,30 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
 
-    /* ===== Desktop default: centered ===== */
+    /* Background stays full screen */
     body {
       min-height: 100vh;   /* fallback */
-      min-height: 100dvh;  /* better on mobile browsers */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
+      min-height: 100dvh;  /* better on modern mobile */
       background: url("./background_ooze_color.png") center / cover no-repeat;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      overflow-x: hidden;
+      overflow: hidden; /* prevent scrolling so we stay on the background */
+    }
+
+    /* Layer that controls positioning */
+    .stage {
+      position: relative;
+      height: 100vh;   /* fallback */
+      height: 100dvh;  /* mobile */
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* centered on desktop */
+      padding: 0;
     }
 
     /* Optional tint overlay */
     .overlay {
-      position: fixed;
+      position: absolute;
       inset: 0;
       background: rgba(0,0,0,0.12);
       pointer-events: none;
@@ -50,45 +58,47 @@
       object-fit: contain;
     }
 
-    /* ===== MOBILE: place the video much lower (requires scroll) ===== */
+    /*
+      MOBILE: anchor the video lower INSIDE the same screen.
+      This keeps it on the background without "pushing past" it.
+    */
     @media (max-width: 768px) {
-      body {
-        /* Stop centering on mobile so we can position it lower */
-        align-items: flex-start;
-        justify-content: center;
-
-        /*
-          This creates extra space ABOVE the video so it appears
-          many inches lower. Increase this to push it even lower.
-          Start here for “10 more inches”.
-        */
-        padding-top: 110dvh;
-
-        /* Keep some safe-area spacing (notch, etc.) */
-        padding-top: calc(110dvh + env(safe-area-inset-top, 0px));
-
-        /* Allow scrolling to reach the video */
-        overflow-y: auto;
+      .stage {
+        align-items: flex-end; /* move toward bottom */
+        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
       }
 
       .media {
         width: 94vw;
-        max-height: 50dvh;
+        max-height: 46dvh; /* keeps it from being too tall */
         border-radius: 14px;
-        margin-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+
+    /*
+      EXTRA SMALL PHONES: even shorter height so it can sit lower comfortably
+    */
+    @media (max-width: 420px) {
+      .media {
+        max-height: 42dvh;
+      }
+      .stage {
+        padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="overlay"></div>
+  <div class="stage">
+    <div class="overlay"></div>
 
-  <div class="media">
-    <video controls playsinline preload="metadata">
-      <source src="./Joke_1.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <div class="media">
+      <video controls playsinline preload="metadata">
+        ./Joke_1.mp4
+        Your browser does not support the video tag.
+      </video>
+    </div>
   </div>
 </body>
 </html>
