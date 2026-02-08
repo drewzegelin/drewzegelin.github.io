@@ -9,17 +9,17 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
 
-    /* Desktop: centered */
+    /* ===== Desktop default: centered ===== */
     body {
       min-height: 100vh;   /* fallback */
-      min-height: 100dvh;  /* stable mobile viewport */
+      min-height: 100dvh;  /* better on mobile browsers */
       display: flex;
-      align-items: center;      /* centered on PC */
+      align-items: center;
       justify-content: center;
-      padding: 0;
 
       background: url("./background_ooze_color.png") center / cover no-repeat;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x: hidden;
     }
 
     /* Optional tint overlay */
@@ -28,6 +28,7 @@
       inset: 0;
       background: rgba(0,0,0,0.12);
       pointer-events: none;
+      z-index: 0;
     }
 
     /* Video container */
@@ -49,10 +50,45 @@
       object-fit: contain;
     }
 
-    /*
-      MOBILE: place video near the bottom.
-      This effectively moves it down a LOT (like “7 inches lower”),
-      but keeps it visible by reserving space with padding-bottom.
-    */
+    /* ===== MOBILE: place the video much lower (requires scroll) ===== */
     @media (max-width: 768px) {
       body {
+        /* Stop centering on mobile so we can position it lower */
+        align-items: flex-start;
+        justify-content: center;
+
+        /*
+          This creates extra space ABOVE the video so it appears
+          many inches lower. Increase this to push it even lower.
+          Start here for “10 more inches”.
+        */
+        padding-top: 110dvh;
+
+        /* Keep some safe-area spacing (notch, etc.) */
+        padding-top: calc(110dvh + env(safe-area-inset-top, 0px));
+
+        /* Allow scrolling to reach the video */
+        overflow-y: auto;
+      }
+
+      .media {
+        width: 94vw;
+        max-height: 50dvh;
+        border-radius: 14px;
+        margin-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay"></div>
+
+  <div class="media">
+    <video controls playsinline preload="metadata">
+      <source src="./Joke_1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</body>
+</html>
